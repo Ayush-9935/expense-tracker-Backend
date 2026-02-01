@@ -17,20 +17,28 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       // ✅ allow postman / server-to-server calls (no origin)
+//       if (!origin) return callback(null, true);
+
+//       if (allowedOrigins.includes(origin)) return callback(null, true);
+
+//       return callback(new Error("Not allowed by CORS: " + origin));
+//     },
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//   })
+// );
+
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // ✅ allow postman / server-to-server calls (no origin)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-
-      return callback(new Error("Not allowed by CORS: " + origin));
-    },
+    origin: process.env.FRONTEND_URL,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
+
 
 app.use(express.json());
 
@@ -38,7 +46,7 @@ app.use(express.json());
    ✅ MONGODB CONNECT
 ======================= */
 const mongoURI =
-  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/smart-expense";
+  process.env.MONGO_URI;
 
 mongoose
   .connect(mongoURI)
